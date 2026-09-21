@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.9.0"
   required_providers {
     jamfpro = {
       source  = "deploymenttheory/jamfpro"
@@ -9,8 +9,8 @@ terraform {
 }
 
 provider "jamfpro" {
-  jamfpro_instance_fqdn = var.jamfpro_instance_fqdn
+  jamfpro_instance_fqdn = var.jamf_fqdn
   auth_method           = "oauth2"
-  client_id             = var.jamfpro_client_id
-  client_secret         = var.jamfpro_client_secret
+  client_id             = var.jamf_client_id
+  client_secret         = var.jamf_client_secret
 }
