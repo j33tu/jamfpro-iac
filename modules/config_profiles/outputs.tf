@@ -1,3 +1,4 @@
 output "profile_ids" {
-  value = { for k, v in jamfpro_mac_os_configuration_profile.this : k => v.id }
+  description = "Map of macOS configuration profile names to Jamf IDs"
+  value       = { for k, v in jamfpro_macos_configuration_profile_plist.this : k => v.id }
 }

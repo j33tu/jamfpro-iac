@@ -1,17 +1,5 @@
-variable "profiles" {
-  description = "Map of configuration profiles to manage"
+variable "config_profiles" {
+  description = "Map of macOS configuration profiles to create in Jamf Pro"
   type        = any
-  default     = {}
-}
-
-variable "category_ids" {
-  description = "Map of category names to Jamf category IDs"
-  type        = map(string)
-  default     = {}
-}
-
-variable "smart_group_ids" {
-  description = "Map of smart group names to Jamf smart group IDs"
-  type        = map(string)
   default     = {}
 }

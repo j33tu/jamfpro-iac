@@ -1,16 +1,16 @@
-resource "jamfpro_mac_os_configuration_profile" "this" {
-  for_each = var.profiles
+resource "jamfpro_macos_configuration_profile_plist" "this" {
+  for_each = var.config_profiles
 
   name        = each.key
-  description = each.value.description
-  category_id = each.value.category_id
-  level       = each.value.level
+  description = try(each.value.description, "")
+  category_id = try(each.value.category_id, -1)
+  level       = try(each.value.level, "computer")
 
-  # Dynamically load raw XML payload from the payloads directory
+  # Dynamically load payload from the specified file path
   payloads = file(each.value.payload_path)
 
   scope {
-    all_computers      = false
-    computer_group_ids = each.value.smart_groups
+    all_computers      = try(each.value.all_computers, false)
+    computer_group_ids = try(each.value.smart_groups, [])
   }
 }

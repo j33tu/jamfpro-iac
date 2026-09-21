@@ -1,6 +1,14 @@
 module "categories" {
-  source     = "./modules/categories"
-  categories = var.categories
+  source = "./modules/categories"
+
+  categories = {
+    "BLR01" = {
+      priority = 1
+    }
+    "AMS02" = {
+      priority = 2
+    }
+  }
 }
 
 module "smart_groups" {
