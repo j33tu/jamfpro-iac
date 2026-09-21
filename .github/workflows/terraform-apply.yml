@@ -1,0 +1,40 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.tf"
+      - "modules/**"
+      - "scripts/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: terraform-apply-production
+  cancel-in-progress: false # never cancel a real apply mid-flight
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: production # requires manual approval if you configure
+                             # a protection rule on this GitHub environment
+    env:
+      JAMFPRO_INSTANCE_FQDN: ${{ secrets.JAMFPRO_INSTANCE_FQDN }}
+      JAMFPRO_CLIENT_ID: ${{ secrets.JAMFPRO_CLIENT_ID }}
+      JAMFPRO_CLIENT_SECRET: ${{ secrets.JAMFPRO_CLIENT_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.5"
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve

@@ -1,0 +1,22 @@
+# Terraform
+.terraform/
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored -- commit it.
+# It pins exact provider versions/hashes so CI and local applies use
+# the identical provider build, same principle as your hash-pinned
+# requirements.txt.
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan.binary
+plan_output.txt
+crash.log
+crash.*.log
+
+# Secrets - never commit these
+*.tfvars
+!*.tfvars.example
+.env
+
+# OS
+.DS_Store
+Thumbs.db

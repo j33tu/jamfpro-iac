@@ -1,0 +1,8 @@
+# Copy this file to terraform.tfvars (which is gitignored) for local use.
+# In CI, these same values come from GitHub Actions secrets as env vars
+# (JAMFPRO_INSTANCE_FQDN, JAMFPRO_CLIENT_ID, JAMFPRO_CLIENT_SECRET) instead.
+
+jamfpro_instance_fqdn = "https://yourorg.jamfcloud.com"
+jamfpro_client_id     = "REPLACE-ME"
+jamfpro_client_secret = "REPLACE-ME"
+environment           = "production"

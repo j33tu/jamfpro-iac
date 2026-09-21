@@ -1,7 +1,0 @@
-{
-    "printer_name": "NYC01-01-xerox",
-    "printer_ip": "192.168.11.120",
-    "driver_url": "https://download.support.xerox.com/pub/drivers/ALB80XX/drivers/macOS13/en_GB/XeroxDrivers_5.19.3_2562.dmg",
-    "category": "Infrastructure",
-    "make_default": false
-}

@@ -1,16 +1,20 @@
-# Example 1: Standard Smart Group targeting macOS Version
-resource "jamfpro_smart_computer_group_v2" "macos_outdated" {
-  name        = "macOS - Outdated Systems (< 15.0)"
-  description = "Managed via Terraform - Catch-all group for pending OS updates"
+# Smart groups drive nearly all scoping in Jamf Pro (which Macs get which
+# policy, printer, profile). Keep the criteria logic here so it's reviewed
+# in PRs like anything else, instead of being clicked together in the console.
 
-  criteria {
-    priority      = 0
-    name          = "Operating System Version"
-    search_type   = "less than"
-    value         = "15.0.0"
-    and_or        = "and"
-    opening_paren = false
-    closing_paren = false
+resource "jamfpro_smart_group" "this" {
+  for_each = var.smart_groups
+
+  name = each.key
+
+  dynamic "criteria" {
+    for_each = each.value.criteria
+    content {
+      name        = criteria.value.name
+      priority    = criteria.value.priority
+      and_or      = criteria.value.and_or
+      search_type = criteria.value.search_type
+      value       = criteria.value.value
+    }
   }
 }
-
