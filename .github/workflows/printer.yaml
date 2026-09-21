@@ -5,6 +5,7 @@ on:
     branches:
       - code-dev
       - code-main
+      - main # <--- Added 'main' branch trigger
     paths:
       # Trigger exclusively when printer JSON configs are added or modified
       - "printers/*.json"
@@ -54,7 +55,8 @@ jobs:
           echo "category=$(jq -r '.category' "$NEW_FILE")" >> $GITHUB_OUTPUT
           echo "make_default=$(jq -r '.make_default' "$NEW_FILE")" >> $GITHUB_OUTPUT
 
-          if [ "${{ github.ref }}" == "refs/heads/code-main" ]; then
+          # Support both code-main and main for PROD tagging
+          if [ "${{ github.ref }}" == "refs/heads/code-main" ] || [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "target_group=$(jq -r '.prod_target_group // "All Computers"' "$NEW_FILE")" >> $GITHUB_OUTPUT
             echo "instance_type=PROD" >> $GITHUB_OUTPUT
           else
