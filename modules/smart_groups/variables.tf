@@ -1,5 +1,13 @@
 variable "smart_groups" {
-  description = "Map of smart groups to manage"
-  type        = any
+  type = map(object({
+    criteria = list(object({
+      name        = string
+      priority    = number
+      and_or      = string
+      search_type = string
+      value       = string
+    }))
+  }))
+  description = "Map of Smart Computer Groups and their criteria"
   default     = {}
 }

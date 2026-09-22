@@ -1,61 +1,44 @@
-# ==============================================================================
-# Jamf Pro Authentication & Global Settings
-# ==============================================================================
-
 variable "jamfpro_instance_fqdn" {
-  description = "Your Jamf Pro instance URL, e.g. https://yourorg.jamfcloud.com"
   type        = string
+  description = "The FQDN of the Jamf Pro instance (e.g. mycompany.jamfcloud.com)"
 }
 
 variable "jamfpro_client_id" {
-  description = "Client ID for the Jamf Pro API role/integration used by Terraform"
   type        = string
+  description = "OAuth2 Client ID for Jamf Pro API Access"
   sensitive   = true
 }
 
 variable "jamfpro_client_secret" {
-  description = "Client secret for the Jamf Pro API role/integration used by Terraform"
   type        = string
+  description = "OAuth2 Client Secret for Jamf Pro API Access"
   sensitive   = true
 }
 
 variable "environment" {
-  description = "Logical environment name, used for tagging/naming (e.g. production, staging)"
   type        = string
+  description = "Deployment environment (e.g., production, staging)"
   default     = "production"
 }
-
-# ==============================================================================
-# Module Resource Maps
-# ==============================================================================
-
-variable "categories" {
-  description = "Map of categories to create in Jamf Pro"
-  type        = any
-  default     = {}
-
+variable "category_name" {
+  type        = string
+  description = "Category name for custom configuration profiles and scripts"
+  default     = "Security & Compliance"
 }
 
-variable "smart_groups" {
-  description = "Map of smart computer groups to configure"
-  type        = any
-  default     = {}
+variable "building_names" {
+  type        = list(string)
+  description = "List of building names to create in Jamf Pro"
+  default     = ["HQ - New York", "Branch - London", "Remote", "mumbai"]
 }
-
-variable "printers" {
-  description = "Map of printers and PPD configurations to deploy"
-  type        = any
-  default     = {}
-}
-
-variable "config_profiles" {
-  description = "Map of macOS configuration profiles (.mobileconfig) to manage"
-  type        = any
-  default     = {}
-}
-
-variable "policies" {
-  description = "Map of Jamf policies (scripts, packages, scopes, triggers) to manage"
-  type        = any
+variable "scripts_config" {
+  type = map(object({
+    category_name = string
+    info          = string
+    notes         = string
+    priority      = string
+    file_path     = string
+  }))
+  description = "Map of script definitions"
   default     = {}
 }
