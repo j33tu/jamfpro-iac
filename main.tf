@@ -1,64 +1,33 @@
-# 1. Categories
-module "categories" {
-  source = "./modules/categories"
+resource "jamfpro_policy" "this" {
+  for_each = var.policies
 
-  categories = {
-    "Security & Compliance" = { priority = 10 }
-    "Patch Management"      = { priority = 20 }
+  # Top-level operational attributes
+  name        = each.key
+  category_id = each.value.category_id
+  enabled     = each.value.enabled != null ? each.value.enabled : true
+  frequency   = each.value.frequency
+
+  # Triggers
+  trigger_checkin             = each.value.trigger_checkin
+  trigger_enrollment_complete = each.value.trigger_enrollment
+  trigger_login               = each.value.trigger_login
+  trigger_other               = each.value.trigger_other
+
+  # Scope assignment
+  scope {
+    all_computers = each.value.all_computers
   }
-}
 
-# 2. Buildings
-module "buildings" {
-  source = "./modules/buildings"
-
-  building_names = var.building_names
-}
-
-# 3. Scripts
-module "scripts" {
-  source = "./modules/scripts"
-
-  scripts = {
-    for name, cfg in var.scripts_config : name => {
-      category_id = module.categories.category_ids[cfg.category_name]
-      info        = cfg.info
-      notes       = cfg.notes
-      priority    = cfg.priority
-      file_path   = cfg.file_path
-    }
-  }
-}
-
-# 4. Smart Computer Groups
-module "smart_groups" {
-  source = "./modules/smart_groups"
-
-  smart_groups = {
-    "macOS Sequoia Endpoints" = {
-      criteria = [
-        {
-          name        = "Operating System Version"
-          priority    = 0
-          and_or      = "and"
-          search_type = "is"
-          value       = "15.0.0"
-        }
-      ]
-    }
-  }
-}
-module "configuration_profiles" {
-  source = "./modules/configuration_profiles"
-
-  profiles = {
-    "macOS Passcode Policy" = {
-      description        = "Enforces strict passcode requirements for corporate endpoints."
-      category_id        = module.categories.category_ids["Security & Compliance"]
-      level              = "computer"
-      all_computers      = true
-      redeploy_on_update = false
-      payload_path       = "${path.module}/payloads/passcode_policy.mobileconfig"
+  # Executable payloads
+  payloads {
+    dynamic "scripts" {
+      for_each = each.value.scripts
+      content {
+        id         = scripts.value.id
+        priority   = scripts.value.priority
+        parameter4 = scripts.value.parameter4
+        parameter5 = scripts.value.parameter5
+      }
     }
   }
 }
